@@ -33,7 +33,7 @@
 #include "HardwareSerial.h"
 #include "drivers/gpio/gpio.h"
 #include <hc32_ddl.h>
-#include "Usart.h"
+#include "drivers/usart/usart.h"
 #include "core_hooks.h"
 #include "core_debug.h"
 #include "yield.h"
