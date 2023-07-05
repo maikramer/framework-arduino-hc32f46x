@@ -25,8 +25,8 @@
 #include "Stream.h"
 #include "hc32f460_usart.h"
 #include "RingBuffer.h"
-#include "usart_config.h"
-#include "../../core_hooks.h"
+#include "drivers/usart/usart_config.h"
+#include "core_hooks.h"
 #include <stddef.h>
 
 #define HARDSER_PARITY_EVEN (0x1ul)
