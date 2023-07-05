@@ -3,7 +3,7 @@
 #include "../../core_debug.h"
 #include "../gpio/gpio.h"
 #include "../irqn/irqn.h"
-#include "usart.h"
+#include "../usart/usart.h"
 
 uint16_t g_adc_value[3];
 

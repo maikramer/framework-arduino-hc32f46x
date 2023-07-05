@@ -1,5 +1,5 @@
 #include "bsp_sdio.h"
-
+#include <stdio.h>
 
 uint32_t au32WriteBlocks[512];
 uint32_t au32ReadBlocks[512];
