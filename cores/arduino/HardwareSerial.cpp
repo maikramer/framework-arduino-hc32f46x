@@ -37,8 +37,8 @@
 #include "core_hooks.h"
 #include "core_debug.h"
 #include "yield.h"
-#include "../gpio/gpio.h"
-#include "../irqn/irqn.h"
+#include "drivers/gpio/gpio.h"
+#include "drivers/irqn/irqn.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
