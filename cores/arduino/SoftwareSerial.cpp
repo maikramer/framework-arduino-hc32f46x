@@ -39,6 +39,7 @@
 #include "bsp_timer.h"
 #include "hc32_ddl.h"
 #include "fastio.h"
+#include "drivers/gpio/gpio.h"
 
 #define OVERSAMPLE 3 // in RX, Timer will generate interruption OVERSAMPLE time during a bit. Thus OVERSAMPLE ticks in a bit. (interrupt not synchronized with edge).
 

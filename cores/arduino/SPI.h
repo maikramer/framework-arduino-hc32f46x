@@ -24,13 +24,7 @@
  * SOFTWARE.
  *****************************************************************************/
 #pragma once
-#ifdef USE_SPI
-#warning "'SPI' has not been tested to work as expected. Proceed at your own risk"
 
-#include "../cores/libmaple_types.h"
-#include "../cores/spi.h"
-
-#include "../cores/boards.h"
 #include <stdint.h>
 #include <wirish.h>
 
@@ -49,6 +43,10 @@
 #define SPI_CLOCK_DIV64 SPI_BAUD_PCLK_DIV_64
 #define SPI_CLOCK_DIV128 SPI_BAUD_PCLK_DIV_128
 #define SPI_CLOCK_DIV256 SPI_BAUD_PCLK_DIV_256
+
+#define SPI_MODE1 0
+#define SPI_MODE2 0
+#define SPI_MODE3 0
 
 /*
  * Roger Clark. 20150106
@@ -79,13 +77,6 @@
 #define BOARD_SPI_DEFAULT_SS PA4
 // #define BOARD_SPI_DEFAULT_SS PC13
 
-#define SPI_MODE0 SPI_MODE_0
-#define SPI_MODE1 SPI_MODE_1
-#define SPI_MODE2 SPI_MODE_2
-#define SPI_MODE3 SPI_MODE_3
-
-#define DATA_SIZE_8BIT SPI_CR1_DFF_8_BIT
-#define DATA_SIZE_16BIT SPI_CR1_DFF_16_BIT
 
 typedef enum
 {
@@ -101,28 +92,19 @@ class SPISettings
 public:
   SPISettings(uint32_t inClock, BitOrder inBitOrder, uint8_t inDataMode)
   {
-    if (__builtin_constant_p(inClock))
-      init_AlwaysInline(inClock, inBitOrder, inDataMode, DATA_SIZE_8BIT);
-    else
-      init_MightInline(inClock, inBitOrder, inDataMode, DATA_SIZE_8BIT);
+   
   }
   SPISettings(uint32_t inClock, BitOrder inBitOrder, uint8_t inDataMode, uint32_t inDataSize)
   {
-    if (__builtin_constant_p(inClock))
-      init_AlwaysInline(inClock, inBitOrder, inDataMode, inDataSize);
-    else
-      init_MightInline(inClock, inBitOrder, inDataMode, inDataSize);
+    
   }
   SPISettings(uint32_t inClock)
   {
-    if (__builtin_constant_p(inClock))
-      init_AlwaysInline(inClock, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT);
-    else
-      init_MightInline(inClock, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT);
+   
   }
   SPISettings()
   {
-    init_AlwaysInline(4000000, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT);
+    
   }
 
 private:
@@ -132,22 +114,13 @@ private:
   }
   void init_AlwaysInline(uint32_t inClock, BitOrder inBitOrder, uint8_t inDataMode, uint32_t inDataSize) __attribute__((__always_inline__))
   {
-    clock = inClock;
-    bitOrder = inBitOrder;
-    dataMode = inDataMode;
-    dataSize = inDataSize;
-    // state    = SPI_STATE_IDLE;
+    
   }
   uint32_t clock;
   uint32_t dataSize;
   uint32_t clockDivider;
-  BitOrder bitOrder;
   uint8_t dataMode;
   uint8_t _SSPin;
-  volatile spi_mode_t state;
-  spi_dev *spi_d;
-  dma_channel spiRxDmaChannel, spiTxDmaChannel;
-  dma_dev *spiDmaDev;
   void (*receiveCallback)() = NULL;
   void (*transmitCallback)() = NULL;
 
@@ -336,14 +309,6 @@ public:
   /* Escape hatch */
 
   /**
-   * @brief Get a pointer to the underlying libmaple spi_dev for
-   *        this HardwareSPI instance.
-   */
-  spi_dev *c_dev() { return _currentSetting->spi_d; }
-
-  spi_dev *dev() { return _currentSetting->spi_d; }
-
-  /**
    * @brief Sets the number of the SPI peripheral to be used by
    *        this HardwareSPI instance.
    *
@@ -352,7 +317,7 @@ public:
    */
   void setModule(int spi_num)
   {
-    _currentSetting = &_settings[spi_num - 1]; // SPI channels are called 1 2 and 3 but the array is zero indexed
+    
   }
 
   /* -- The following methods are deprecated --------------------------- */
@@ -388,7 +353,6 @@ public:
   uint8_t recv();
 
 private:
-  SPISettings _settings[BOARD_NR_SPI];
   SPISettings *_currentSetting;
 
   void updateSettings();
@@ -418,18 +382,4 @@ private:
   */
 };
 
-/**
- * @brief Wait until TXE (tx empty) flag is set and BSY (busy) flag unset.
- */
-static inline void waitSpiTxEnd(spi_dev *spi_d)
-{
-  while (spi_is_tx_empty(spi_d) == 0)
-  { /* nada */
-  } // wait until TXE=1
-  while (spi_is_busy(spi_d) != 0)
-  { /* nada */
-  } // wait until BSY=0
-}
-
 extern SPIClass SPI;
-#endif

@@ -4,6 +4,18 @@
 uint32_t au32WriteBlocks[512];
 uint32_t au32ReadBlocks[512];
 
+static en_result_t SdiocInitPins(void)
+{
+    PORT_SetFunc(SDIOC_D0_PORT, SDIOC_D0_PIN, Func_Sdio, Disable);
+    PORT_SetFunc(SDIOC_D1_PORT, SDIOC_D1_PIN, Func_Sdio, Disable);
+    PORT_SetFunc(SDIOC_D2_PORT, SDIOC_D2_PIN, Func_Sdio, Disable);
+    PORT_SetFunc(SDIOC_D3_PORT, SDIOC_D3_PIN, Func_Sdio, Disable);
+    PORT_SetFunc(SDIOC_CD_PORT, SDIOC_CD_PIN, Func_Sdio, Disable);
+    PORT_SetFunc(SDIOC_CK_PORT, SDIOC_CK_PIN, Func_Sdio, Disable);
+    PORT_SetFunc(SDIOC_CMD_PORT, SDIOC_CMD_PIN, Func_Sdio, Disable);
+
+    return Ok;
+}
 
 stc_sdcard_init_t stcCardInitCfg =
 {
@@ -33,28 +45,15 @@ void hal_sdio_init()
 
 void sdio_controller_init()
 {
-    en_result_t enTestResult = Ok;
+    // en_result_t enTestResult = Ok;
 
     stcSdhandle.SDIOCx = SDIOC_UNIT;
     stcSdhandle.enDevMode = SdCardDmaMode;
     stcSdhandle.pstcDmaInitCfg = &stcDmaInitCfg;
     if (Ok != SDCARD_Init(&stcSdhandle, &stcCardInitCfg))
     {
-        enTestResult = Error;
+        // enTestResult = Error;
     }
-}
-
-static en_result_t SdiocInitPins(void)
-{
-    PORT_SetFunc(SDIOC_D0_PORT, SDIOC_D0_PIN, Func_Sdio, Disable);
-    PORT_SetFunc(SDIOC_D1_PORT, SDIOC_D1_PIN, Func_Sdio, Disable);
-    PORT_SetFunc(SDIOC_D2_PORT, SDIOC_D2_PIN, Func_Sdio, Disable);
-    PORT_SetFunc(SDIOC_D3_PORT, SDIOC_D3_PIN, Func_Sdio, Disable);
-    PORT_SetFunc(SDIOC_CD_PORT, SDIOC_CD_PIN, Func_Sdio, Disable);
-    PORT_SetFunc(SDIOC_CK_PORT, SDIOC_CK_PIN, Func_Sdio, Disable);
-    PORT_SetFunc(SDIOC_CMD_PORT, SDIOC_CMD_PIN, Func_Sdio, Disable);
-
-    return Ok;
 }
 
 uint8_t sdio_write(uint32_t blockAddress, const uint8_t *data)
@@ -100,7 +99,7 @@ void sdio_raw_test()
     printf("erased: \n");
     for (uint16_t i = 0u; i < ARRAY_SZ(au32WriteBlocks); i++)
     {
-        printf("%02X ", au32ReadBlocks[i]);
+        printf("%lu",au32ReadBlocks[i]);
     }
     printf("\n");
 
@@ -124,7 +123,7 @@ void sdio_raw_test()
     printf("writed: \n");
     for (uint16_t i = 0u; i < ARRAY_SZ(au32WriteBlocks); i++)
     {
-        printf("%02X ", au32ReadBlocks[i]);
+        printf("%lu ", au32ReadBlocks[i]);
     }
     printf("\n");
 

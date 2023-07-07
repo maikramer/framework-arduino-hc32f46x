@@ -6,15 +6,16 @@
 #include "../gpio/gpio.h"
 #include "../irqn/irqn.h"
 #include "HardwareSerial.h"
+#include "../../variant.h"
 
 //
 // global instances
 //
 #ifndef DISABLE_SERIAL_GLOBALS
-HardwareSerial MSerial1(&USART1_config, VARIANT_USART1_TX_PIN, VARIANT_USART1_RX_PIN);
-HardwareSerial MSerial2(&USART2_config, VARIANT_USART2_TX_PIN, VARIANT_USART2_RX_PIN);
-HardwareSerial MSerial3(&USART3_config, VARIANT_USART3_TX_PIN, VARIANT_USART3_RX_PIN);
-HardwareSerial MSerial4(&USART4_config, VARIANT_USART4_TX_PIN, VARIANT_USART4_RX_PIN);
+HardwareSerial HSerial1(&USART1_config, VARIANT_USART1_TX_PIN, VARIANT_USART1_RX_PIN);
+HardwareSerial HSerial2(&USART2_config, VARIANT_USART2_TX_PIN, VARIANT_USART2_RX_PIN);
+HardwareSerial HSerial3(&USART3_config, VARIANT_USART3_TX_PIN, VARIANT_USART3_RX_PIN);
+HardwareSerial HSerial4(&USART4_config, VARIANT_USART4_TX_PIN, VARIANT_USART4_RX_PIN);
 #endif
 
 //
@@ -23,7 +24,7 @@ HardwareSerial MSerial4(&USART4_config, VARIANT_USART4_TX_PIN, VARIANT_USART4_RX
 void Usart1RxIrqCallback(void)
 {
     uint8_t c = USART_RecData(M4_USART1);
-    MSerial1._rx_complete_callback(c);
+    HSerial1._rx_complete_callback(c);
 //  RingBuf_Write(&Usart1RingBuf,(uint8_t)tmp);
 }
 
@@ -59,7 +60,7 @@ void Usart1TxCmpltIrqCallback(void)
 void Usart2RxIrqCallback(void)
 {
     uint8_t c = USART_RecData(M4_USART2);
-    MSerial2._rx_complete_callback(c);
+    HSerial2._rx_complete_callback(c);
 
 //  RingBuf_Write(&Usart2RingBuf,(uint8_t)tmp);
 }
@@ -96,7 +97,7 @@ void Usart2TxCmpltIrqCallback(void)
 void Usart3RxIrqCallback(void)
 {
     uint8_t c = USART_RecData(M4_USART3);
-    MSerial3._rx_complete_callback(c);
+    HSerial3._rx_complete_callback(c);
 //  RingBuf_Write(&Usart3RingBuf,(uint8_t)tmp);
 }
 
@@ -132,7 +133,7 @@ void Usart3TxCmpltIrqCallback(void)
 void Usart4RxIrqCallback(void)
 {
     uint8_t c = USART_RecData(M4_USART4);
-    MSerial4._rx_complete_callback(c);
+    HSerial4._rx_complete_callback(c);
 //  RingBuf_Write(&Usart3RingBuf,(uint8_t)tmp);
 }
 

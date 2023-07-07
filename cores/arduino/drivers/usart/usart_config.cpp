@@ -1,7 +1,7 @@
 #include "usart.h"
 #include "usart_config.h"
 #include "usart_handlers.h"
-#include "../../WVariant.h"
+#include "../gpio/gpio.h"
 #include "../../core_hooks.h"
 
 // UART1

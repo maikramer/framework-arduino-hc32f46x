@@ -170,8 +170,8 @@ void HardwareSerial::begin(uint32_t baud, const stc_usart_uart_init_t *config)
     // this->txBuffer->clear();
 
     // set IO pin functions
-    GPIO_SetFunc(this->tx_pin, this->config->peripheral.tx_pin_function);
-    GPIO_SetFunc(this->rx_pin, this->config->peripheral.rx_pin_function);
+    GPIO_SetFunc(this->tx_pin, this->config->peripheral.tx_pin_function, Disable);
+    GPIO_SetFunc(this->rx_pin, this->config->peripheral.rx_pin_function, Disable);
 
     // enable peripheral clock
     PWC_Fcg1PeriphClockCmd(this->config->peripheral.clock_id, Enable);

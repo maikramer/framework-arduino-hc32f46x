@@ -109,7 +109,7 @@ public:
   using Print::write; // pull in write(str) and write(buf, size) from Print
   operator bool() { return true; }
 
-  bool connected() {};
+  bool connected() { return true; };
   void flushTX() { flush(); };
   void msgDone() {};
 

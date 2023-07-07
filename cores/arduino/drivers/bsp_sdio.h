@@ -43,7 +43,6 @@ void hal_sdio_init();
 
 void sdio_controller_init();
 
-static en_result_t SdiocInitPins(void);
 uint8_t sdio_write(uint32_t blockAddress, const uint8_t *data);
 uint8_t sdio_read(uint32_t blockAddress, uint8_t *data);
 

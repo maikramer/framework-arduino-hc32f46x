@@ -30,7 +30,7 @@ void noTone(uint8_t _pin, bool destruct)
 
 }
 
-void HAL_TONE_TIMER_ISR()
+HAL_TONE_TIMER_ISR()
 {
     if(duration_cnt) {
         duration_cnt--;

@@ -17,74 +17,62 @@
 */
 
 #pragma once
+
 #include <stdint.h>
 #include "drivers/usart/usart.h"
 #include "HardwareSerial.h"
 #include "RingBuffer.h"
 #include "usart_config.h"
 
-class Usart : public HardwareSerial
-{
+class Usart : public HardwareSerial {
 public:
-  /**
-   * @brief construct a new Usart object
-   * @param config pointer to the usart configuration struct
-   * @param tx_pin gpio pin number for tx function
-   * @param rx_pin gpio pin number for rx function
-   */
-  Usart(struct usart_config_t *config, uint16_t tx_pin, uint16_t rx_pin);
-  void begin(uint32_t baud);
-  void begin(uint32_t baud, uint16_t config);
-  void begin(uint32_t baud, const stc_usart_uart_init_t *config);
-  void end();
-  int available();
-  int availableForWrite();
-  int peek();
-  int read();
-  void flush();
-  size_t write(uint8_t ch);
-  using Print::write; // pull in write(str) and write(buf, size) from Print
-  operator bool() { return true; }
+    /**
+     * @brief construct a new Usart object
+     * @param config pointer to the usart configuration struct
+     * @param tx_pin gpio pin number for tx function
+     * @param rx_pin gpio pin number for rx function
+     */
+    Usart(struct usart_config_t *config, uint16_t tx_pin, uint16_t rx_pin) : HardwareSerial(config,
+                                                                                            tx_pin,
+                                                                                            rx_pin) {}
 
-  bool connected() {};
-  void flushTX() { flush(); };
-  void msgDone() {};
+    void flushTX() { flush(); };
 
-  /**
-   * @brief access the base usart config struct
-   */
-  const usart_config_t *c_dev(void) { return this->config; }
+    /**
+     * @brief access the base usart config struct
+     */
+    const usart_config_t *c_dev(void) { return this->config; }
 
-  /**
-   * @brief get the last receive error
-   * @note calling this function clears the error
-   */
-  const usart_receive_error_t getReceiveError(void);
+    /**
+     * @brief get the last receive error
+     * @note calling this function clears the error
+     */
+    const usart_receive_error_t getReceiveError(void);
 
 private:
-  // usart configuration struct
-  usart_config_t *config;
+    // usart configuration struct
+    usart_config_t *config;
 
-  // tx / rx pin numbers
-  uint16_t tx_pin;
-  uint16_t rx_pin;
+    // tx / rx pin numbers
+    uint16_t tx_pin;
+    uint16_t rx_pin;
 
-  // rx / tx buffers (unboxed from config)
-  RingBuffer *rxBuffer;
-  RingBuffer *txBuffer;
+    // rx / tx buffers (unboxed from config)
+    RingBuffer *rxBuffer;
+    RingBuffer *txBuffer;
 
-  // is initialized? (begin() called)
-  bool initialized = false;
+    // is initialized? (begin() called)
+    bool initialized = false;
 };
 
 //
 // global instances
 //
 #ifndef DISABLE_SERIAL_GLOBALS
-extern HardwareSerial MSerial1;
-extern HardwareSerial MSerial2;
-extern HardwareSerial MSerial3;
-extern HardwareSerial MSerial4;
+// extern HardwareSerial MSerial1;
+// extern HardwareSerial MSerial2;
+// extern HardwareSerial MSerial3;
+// extern HardwareSerial MSerial4;
 
 #define Serial MSerial1
 #endif
@@ -95,27 +83,43 @@ extern "C"
 #endif
 
 void uart1_init(void);
+
 void Usart1RxIrqCallback(void);
+
 void Usart1ErrIrqCallback(void);
+
 void Usart1TxIrqCallback(void);
+
 void Usart1TxCmpltIrqCallback(void);
 
 void uart2_init(void);
+
 void Usart2RxIrqCallback(void);
+
 void Usart2ErrIrqCallback(void);
+
 void Usart2TxIrqCallback(void);
+
 void Usart2TxCmpltIrqCallback(void);
 
 void uart3_init(void);
+
 void Usart3RxIrqCallback(void);
+
 void Usart3ErrIrqCallback(void);
+
 void Usart3TxIrqCallback(void);
+
 void Usart3TxCmpltIrqCallback(void);
 
 void uart4_init(void);
+
 void Usart4RxIrqCallback(void);
+
 void Usart4ErrIrqCallback(void);
+
 void Usart4TxIrqCallback(void);
+
 void Usart4TxCmpltIrqCallback(void);
 
 /*

@@ -1,4 +1,5 @@
 #include "flash.h"
+#include <stdio.h>
 
 namespace Intflash {
 

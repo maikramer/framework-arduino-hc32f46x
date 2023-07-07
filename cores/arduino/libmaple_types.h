@@ -1,44 +1,79 @@
-#pragma once
-#include <stdint.h>
-#include "wirish_types.h"
+/******************************************************************************
+ * The MIT License
+ *
+ * Copyright (c) 2010 Perry Hung.
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *****************************************************************************/
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+/**
+ *  @file libmaple_types.h
+ *
+ *  @brief libmaple types
+ */
 
-    typedef unsigned char uint8;
-    typedef unsigned short uint16;
-    typedef uint32_t uint32;
-    typedef unsigned long long uint64;
+#ifndef _LIBMAPLE_TYPES_H_
+#define _LIBMAPLE_TYPES_H_
 
-    typedef signed char int8;
-    typedef short int16;
-    typedef int int32;
-    typedef long long int64;
+#include <inttypes.h>
 
-    typedef void (*voidFuncPtr)(void);
-    typedef void (*voidArgumentFuncPtr)(void *);
+typedef unsigned char uint8;
+typedef unsigned short uint16;
+typedef unsigned int uint32;
+typedef unsigned long long uint64;
+
+typedef signed char int8;
+typedef short int16;
+typedef int int32;
+typedef long long int64;
+
+typedef void (*voidFuncPtr)(void);
 
 #define __IO volatile
-#define __packed __attribute__((__packed__))
-#define __deprecated __attribute__((__deprecated__))
-#define __weak __attribute__((weak))
-#ifndef __always_inline
-#define __always_inline __attribute__((always_inline))
-#endif
-#ifndef __unused
-#define __unused __attribute__((unused))
-#endif
 
+#ifndef __attr_flash
+  #define __attr_flash __attribute__((section (".USER_FLASH")))
+#endif
+#ifndef NO_CCMRAM
+#ifndef __attr_ccmram
+  #define __attr_ccmram __attribute__((section (".ccmdata")))
+#endif
+#endif
+#ifdef __always_inline
+  #undef  __always_inline
+#endif
+  #define __always_inline inline __attribute__((always_inline))
 #ifndef NULL
-#define NULL 0
+  #define NULL 0
 #endif
 
-#ifndef offsetof
-#define offsetof(type, member) __builtin_offsetof(type, member)
+// Variable attributes, instructs the linker to place the marked
+// variable in FLASH or CCRAM instead of RAM.
+#define __FLASH__ __attr_flash
+#ifndef NO_CCMRAM
+#define __CCMRAM__ __attr_ccmram
+#else
+#define __CCMRAM__
 #endif
 
-#ifdef __cplusplus
-}
+
 #endif
+

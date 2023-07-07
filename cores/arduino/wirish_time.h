@@ -1,5 +1,4 @@
 #pragma once
-#include "libmaple_types.h"
 #include <hc32_ddl.h>
 
 #define delay(ms) Ddl_Delay1ms(ms)

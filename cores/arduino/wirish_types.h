@@ -40,7 +40,6 @@
  * variable in Flash instead of RAM. */
 #define __FLASH__ __attr_flash
 
-typedef bool boolean;
 typedef uint8_t byte;
 
 #endif

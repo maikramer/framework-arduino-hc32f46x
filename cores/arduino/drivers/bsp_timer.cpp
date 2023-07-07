@@ -1,8 +1,7 @@
 #include "hc32f460.h"
 
 #include "bsp_timer.h"
-#include "usart.h"
-#include <init.h>
+#include "usart/usart.h"
 #include "SoftwareSerial.h"
 
 #define IRQ_INDEX_INT_TMR01_GCMA        Int019_IRQn
@@ -15,6 +14,37 @@
 #define IRQ_INDEX_INT_TMR42_GCMB        Int024_IRQn
 
 extern volatile uint32_t uptime;
+
+/*!< Parameter validity check for Timer4 unit  */
+#define IS_VALID_TIMER4(__TMRx__) \
+  ((M4_TMR41 == (__TMRx__)) ||    \
+   (M4_TMR42 == (__TMRx__)) ||    \
+   (M4_TMR43 == (__TMRx__)))
+
+static en_result_t TIMER4_CNT_Load(M4_TMR4_TypeDef *TMR4x, stc_timer4_cnt_init_t *pstcInitCfg)
+{
+  en_result_t enRet = ErrorInvalidParameter;
+
+  if ((IS_VALID_TIMER4(TMR4x)) && (NULL != pstcInitCfg))
+  {
+
+    pstcInitCfg->u16Cycle = TMR4x->CPSR;
+
+    pstcInitCfg->enCntMode = (en_timer4_cnt_mode_t)TMR4x->CCSR_f.MODE;
+    pstcInitCfg->enClk = (en_timer4_cnt_clk_t)TMR4x->CCSR_f.ECKEN;
+    pstcInitCfg->enClkDiv = (en_timer4_cnt_clk_div_t)TMR4x->CCSR_f.CKDIV;
+    pstcInitCfg->enBufferCmd = (en_functional_state_t)TMR4x->CCSR_f.BUFEN;
+    pstcInitCfg->enZeroIntCmd = (en_functional_state_t)TMR4x->CCSR_f.IRQZEN;
+    pstcInitCfg->enPeakIntCmd = (en_functional_state_t)TMR4x->CCSR_f.IRQPEN;
+
+    pstcInitCfg->enZeroIntMsk = (en_timer4_cnt_int_mask_t)TMR4x->CVPR_f.ZIM;
+    pstcInitCfg->enPeakIntMsk = (en_timer4_cnt_int_mask_t)TMR4x->CVPR_f.PIM;
+
+    enRet = Ok;
+  }
+
+  return enRet;
+}
 
 void Timer02A_CallBack(void)
 {
@@ -148,7 +178,7 @@ void timer02B_init(void)
 {
   stc_clk_freq_t clkInfo;
 
-  uint32_t pclk1Freq;
+  // uint32_t pclk1Freq;
 
   stc_tim0_base_init_t timerConf;
 
@@ -158,7 +188,7 @@ void timer02B_init(void)
 
 // Get pclk1
   CLK_GetClockFreq(&clkInfo);
-  pclk1Freq = clkInfo.pclk1Freq;
+  // pclk1Freq = clkInfo.pclk1Freq;
 
   timerConf.Tim0_CounterMode = Tim0_Sync;
   timerConf.Tim0_SyncClockSource = Tim0_Pclk1;
@@ -324,8 +354,8 @@ void timer42_init_check(void)
 
 void timer42_set_frequency(const uint32_t frequency)
 {
-  uint32_t u32Cycle = 0;
-  uint8_t u8ClkDiv = 0;
+  // uint32_t u32Cycle = 0;
+  // uint8_t u8ClkDiv = 0;
 
   stc_timer4_cnt_init_t stcCntInit;
 
@@ -381,6 +411,7 @@ bool timer42_irq_get()
 bool timer42_set_compare(const uint16_t compare)
 {
   TIMER4_CNT_SetCycleVal(M4_TMR42, compare);
+  return true;
 }
 
 uint16_t timer42_get_count()

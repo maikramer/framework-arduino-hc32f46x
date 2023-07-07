@@ -98,7 +98,7 @@ void print_stack_frame(hardfault_stack_frame_t *stack_frame)
 /**
  * @brief hard fault handler in C, called by assembly wrapper
  */
-void HardFault_Handler_C(hardfault_stack_frame_t *stack_frame, uint32_t lr_value)
+void HardFault_IrqHandler()
 {
     // prepare panic message formatting
     panic_begin();
@@ -135,25 +135,13 @@ void HardFault_Handler_C(hardfault_stack_frame_t *stack_frame, uint32_t lr_value
     }
 #endif
 
-    // - stack frame
-    panic_printf("- Stack frame:\n");
-    print_stack_frame(stack_frame);
-
     // - misc
     //  * LR value
     panic_printf("- Misc:\n");
-    panic_printf("LR = 0x%08lx\n", lr_value);
 
     // - footer
     panic_printf("***\n\n");
 
     // end panic message and halt
     panic_end();
-}
-
-/**
- * @brief hard fault handler wrapper in assembly
- */
-__attribute__((naked)) void HardFault_Handler(void)
-{
 }

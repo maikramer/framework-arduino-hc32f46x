@@ -128,7 +128,7 @@ void fan_pwm_set_ratio(uint8_t fan, uint8_t ratio)
         break;
     }
 
-    uint16_t cmp = TIMERA_GetCompareValue(tim_base, tim_ch);
+    // uint16_t cmp = TIMERA_GetCompareValue(tim_base, tim_ch);
     uint16_t ped = TIMERA_GetPeriodValue(tim_base);
 
     uint16_t compareValue = ped * ratio >> 8;

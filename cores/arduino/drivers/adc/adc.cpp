@@ -215,9 +215,7 @@ void adc_await_conversion_completed(const adc_device_t *device)
 {
     ASSERT_INITIALIZED(device, STRINGIFY(adc_await_conversion_completed));
     while (!adc_is_conversion_completed(device))
-    {
-        yield();
-    }
+        ;
 }
 
 uint16_t adc_conversion_read_result(const adc_device_t *device, const uint8_t adc_channel)

@@ -31,14 +31,6 @@ typedef bool boolean;
 typedef uint8_t byte;
 typedef uint16_t word;
 
-// some libraries and sketches depend on this AVR stuff,
-// assuming Arduino.h or WProgram.h automatically includes it...
-//
-#include "avr/pgmspace.h"
-#include "avr/interrupt.h"
-#include "avr/io.h"
-#include "avr/dtostrf.h"
-
 #include "binary.h"
 #include "itoa.h"
 
@@ -56,7 +48,7 @@ int main( void );
 void setup( void ) ;
 void loop( void ) ;
 
-#include "WVariant.h"
+#include "drivers/gpio/gpio.h"
 
 #ifdef __cplusplus
 } // extern "C"
@@ -80,13 +72,18 @@ void loop( void ) ;
 #include "wiring_analog.h"
 #include "wiring_shift.h"
 #include "WInterrupts.h"
+#include "dtostrf.h"
 
 // undefine stdlib's abs if encountered
 #ifdef abs
 #undef abs
 #endif // abs
 
-#define min(a,b) ((a)<(b)?(a):(b))
+constexpr uint32_t min(uint32_t a, uint32_t b)
+{
+  return (a) < (b) ? (a) : (b);
+}
+
 #define max(a,b) ((a)>(b)?(a):(b))
 #define abs(x) ((x)>0?(x):-(x))
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
@@ -120,7 +117,11 @@ static inline void noInterrupts() {
 
 // dynamic F_CPU
 #include "drivers/sysclock/sysclock.h"
-extern uint32_t F_CPU;
+// extern uint32_t F_CPU;
+#ifdef BOARD_F_CPU
+  #undef F_CPU
+  #define F_CPU BOARD_F_CPU
+#endif
 #define CYCLES_PER_MICROSECOND  (F_CPU / 1000000UL)
 
 #define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )

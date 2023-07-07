@@ -4,7 +4,7 @@
 
 en_result_t sdio_main(void)
 {
-
+	return Ok;
 }
 
 bool steup_sdio(void)
