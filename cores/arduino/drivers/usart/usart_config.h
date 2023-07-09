@@ -2,6 +2,14 @@
 #include <hc32_ddl.h>
 #include "../../RingBuffer.hpp"
 
+#ifndef SERIAL_BUFFER_SIZE
+#define SERIAL_BUFFER_SIZE 4096
+#endif
+
+class UsartBuffer : public RingBuffer<SERIAL_BUFFER_SIZE>
+{
+};
+
 /**
  * @brief USART peripheral configuration
  */
@@ -101,12 +109,12 @@ struct usart_runtime_state_t
     /**
      * @brief USART receive buffer
      */
-    RingBuffer *rx_buffer;
+    UsartBuffer *rx_buffer;
 
     /**
      * @brief USART transmit buffer
      */
-    RingBuffer *tx_buffer;
+    UsartBuffer *tx_buffer;
 
     /**
      * @brief last error in RX error interrupt handler

@@ -57,16 +57,6 @@ extern "C"
 #define IRQ_INDEX_INT_DMA2_TC1 Int017_IRQn
 #define IRQ_INDEX_INT_DMA2_TC2 Int018_IRQn
 
-#ifndef SERIAL_BUFFER_SIZE
-#define SERIAL_BUFFER_SIZE 256
-#endif
-#ifndef SERIAL_TX_BUFFER_SIZE
-#define SERIAL_TX_BUFFER_SIZE SERIAL_BUFFER_SIZE
-#endif
-#ifndef SERIAL_RX_BUFFER_SIZE
-#define SERIAL_RX_BUFFER_SIZE SERIAL_BUFFER_SIZE
-#endif
-
 // usart device variables
 #define USART_DEV_VARS(nr)           \
     extern usart_config_t usart##nr; \

@@ -17,8 +17,8 @@
 #include <limits>
 #include <atomic>
 
-#define BUFFER_SIZE 256
-
+#define DEFAULT_BUFFER_SIZE 256
+template<size_t buffer_size = DEFAULT_BUFFER_SIZE>
 class RingBuffer {
 public:
     /*!
@@ -264,14 +264,11 @@ public:
 
 private:
     constexpr static bool fake_tso = false;
-    constexpr static uint32_t
-    buffer_size = BUFFER_SIZE;
     constexpr static size_t
     buffer_mask = buffer_size - 1;
     size_t head; //!< head index
     size_t tail; //!< tail index
 
-    // put buffer after variables so everything can be reached with short offsets
     uint8_t data_buff[buffer_size]; //!< actual buffer
 };
 

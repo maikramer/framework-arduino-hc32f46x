@@ -3,7 +3,7 @@
 #include <stdarg.h>
 
 #define PRINTF_BUFFER_SIZE 256
-
+#define USART_PRIORITY 1
 //
 // USART1_config callbacks
 //
@@ -225,7 +225,7 @@ void usart_enable(struct usart_config_t *config)
 	}
 
 	enIrqRegistration(&irqConf);
-	NVIC_SetPriority(irqConf.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
+	NVIC_SetPriority(irqConf.enIRQn, USART_PRIORITY);
 	NVIC_ClearPendingIRQ(irqConf.enIRQn);
 	NVIC_EnableIRQ(irqConf.enIRQn);
 
@@ -252,7 +252,7 @@ void usart_enable(struct usart_config_t *config)
 		irqConf.pfnCallback = &Usart4ErrIrqCallback;
 	}
 	enIrqRegistration(&irqConf);
-	NVIC_SetPriority(irqConf.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
+	NVIC_SetPriority(irqConf.enIRQn, USART_PRIORITY);
 	NVIC_ClearPendingIRQ(irqConf.enIRQn);
 	NVIC_EnableIRQ(irqConf.enIRQn);
 
@@ -279,7 +279,7 @@ void usart_enable(struct usart_config_t *config)
 		irqConf.pfnCallback = &Usart4TxIrqCallback;
 	}
 	enIrqRegistration(&irqConf);
-	NVIC_SetPriority(irqConf.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
+	NVIC_SetPriority(irqConf.enIRQn, USART_PRIORITY);
 	NVIC_ClearPendingIRQ(irqConf.enIRQn);
 	NVIC_EnableIRQ(irqConf.enIRQn);
 
@@ -306,7 +306,7 @@ void usart_enable(struct usart_config_t *config)
 		irqConf.pfnCallback = &Usart4TxCmpltIrqCallback;
 	}
 	enIrqRegistration(&irqConf);
-	NVIC_SetPriority(irqConf.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
+	NVIC_SetPriority(irqConf.enIRQn, USART_PRIORITY);
 	NVIC_ClearPendingIRQ(irqConf.enIRQn);
 	NVIC_EnableIRQ(irqConf.enIRQn);
 
@@ -396,7 +396,7 @@ void usart_putudec(struct usart_config_t *config, uint32_t val)
 
 size_t usart_print(struct usart_config_t *config, const char *msg)
 {
-	size_t i;
+	size_t i = 0;
 	do
 	{
 		usart_putc(config, msg[i]);

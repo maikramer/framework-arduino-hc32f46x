@@ -81,8 +81,8 @@ usart_config_t USART1_config = {
         },
     },
     .state = {
-        .rx_buffer = new RingBuffer(),
-        .tx_buffer = new RingBuffer(),
+        .rx_buffer = new UsartBuffer(),
+        .tx_buffer = new UsartBuffer(),
         .rx_error = usart_receive_error_t::None
     },
 };
@@ -113,8 +113,8 @@ usart_config_t USART2_config = {
         },
     },
     .state = {
-        .rx_buffer = new RingBuffer(),
-        .tx_buffer = new RingBuffer(),
+        .rx_buffer = new UsartBuffer(),
+        .tx_buffer = new UsartBuffer(),
         .rx_error = usart_receive_error_t::None
     },
 };
@@ -132,8 +132,8 @@ usart_config_t USART3_config = {
         .tx_complete = {.interrupt_priority = DDL_IRQ_PRIORITY_DEFAULT, .interrupt_source = INT_USART3_TCI},
     },
     .state = {
-        .rx_buffer = new RingBuffer(),
-        .tx_buffer = new RingBuffer(),
+        .rx_buffer = new UsartBuffer(),
+        .tx_buffer = new UsartBuffer(),
         .rx_error = usart_receive_error_t::None,
     },
 };
@@ -164,8 +164,8 @@ usart_config_t USART4_config = {
         },
     },
     .state = {
-        .rx_buffer = new RingBuffer(),
-        .tx_buffer = new RingBuffer(),
+        .rx_buffer = new UsartBuffer(),
+        .tx_buffer = new UsartBuffer(),
         .rx_error = usart_receive_error_t::None,
     },
 };
