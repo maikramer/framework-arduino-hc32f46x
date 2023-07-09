@@ -3,6 +3,7 @@
 #include "bsp_timer.h"
 #include "usart/usart.h"
 #include "SoftwareSerial.h"
+#include <stdio.h>
 
 #define IRQ_INDEX_INT_TMR01_GCMA        Int019_IRQn
 #define IRQ_INDEX_INT_TMR01_GCMB        Int020_IRQn

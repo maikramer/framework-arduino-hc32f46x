@@ -33,8 +33,6 @@
 #ifndef _WIRISH_WIRISH_TYPES_H_
 #define _WIRISH_WIRISH_TYPES_H_
 
-#include "libmaple_types.h"
-
 /**
  * Variable attribute, instructs the linker to place the marked
  * variable in Flash instead of RAM. */

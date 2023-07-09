@@ -8,53 +8,60 @@
 #include "bsp_timer.h"
 #include "delay.h"
 #include "../drivers/ots/ots.h"
+#include "../drivers/gpio/gpio.h"
 #include "../FatFs/diskio.h"
 #include "../drivers/panic/panic.h"
+#include "../drivers/panic/fault_handlers.h"
+#include <stdlib.h>
+#include <stdarg.h>
 
-int main(void)
-{
-  void fault_handlers_init(void);
-  // initialize SoC, then CORE_DEBUG
-  core_init();
-  CORE_DEBUG_INIT();
+//For serial testing
+//HardwareSerial debug{&USART2_config, PA2, PA3};
 
-  // call setup()
-  core_hook_pre_setup();
-  CORE_DEBUG_PRINTF("core entering setup\n");
+int main(void) {
+    fault_handlers_init();
+    // initialize SoC, then CORE_DEBUG
+    core_init();
+    CORE_DEBUG_INIT();
 
-  H32OTS::init();
-  get_all_clock();
-  endstop_pin_init();
-  stepper_pin_init();
-  heater_pin_init();
+    // call setup()
+    core_hook_pre_setup();
+    CORE_DEBUG_PRINTF("core entering setup\n");
 
-  // 0x1C swd on ; 0x1F swd off
-  PORT_DebugPortSetting(0x1F, Disable);
+    H32OTS::init();
+    get_all_clock();
+    endstop_pin_init();
+    stepper_pin_init();
+    heater_pin_init();
 
-  fan_pwm_init();
-  beep_pwm_init();
-  hal_sdio_init();
+    // 0x1C swd on ; 0x1F swd off
+    PORT_DebugPortSetting(0x1F, Disable);
 
-  // disk_initialize(0);
+    fan_pwm_init();
+    beep_pwm_init();
+    hal_sdio_init();
 
-  timer01B_init(); // used for beep duration timer
-  timer02A_init(); // 1k Hz, millis()
-  timer02B_init(); // soft serial
-  timer41_init();  // 1k Hz, used for temperature tick
-  timer42_init();  // step motor
+    // disk_initialize(0);
 
-  // SysTick configuration
-  SysTick_Init(1000u);
+    timer01B_init(); // used for beep duration timer
+    timer02A_init(); // 1k Hz, millis()
+    timer02B_init(); // soft serial
+    timer41_init();  // 1k Hz, used for temperature tick
+    timer42_init();  // step motor
 
-  setup();
-  core_hook_post_setup();
+    // SysTick configuration
+    SysTick_Init(1000u);
 
-  // call loop() forever
-  CORE_DEBUG_PRINTF("core entering main loop\n");
-  while (1)
-  {
-    core_hook_loop();
-    loop();
-  }
-  return 0;
+//    debug.begin(115200);
+//    debug.printf("Teste : %s", "Eu to so testando essa merda pra ver se vai");
+
+    setup();
+    core_hook_post_setup();
+
+    // call loop() forever
+    while (1) {
+        core_hook_loop();
+        loop();
+    }
+    return 0;
 }

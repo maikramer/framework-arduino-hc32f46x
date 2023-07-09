@@ -82,9 +82,6 @@ void core_init() {
     update_system_clock_frequencies();
     systick_init();
     adc_init();
-    uart1_init();
-    uart2_init();
-    uart4_init();
 }
 
 

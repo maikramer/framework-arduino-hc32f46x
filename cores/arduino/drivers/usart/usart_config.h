@@ -1,6 +1,6 @@
 #pragma once
 #include <hc32_ddl.h>
-#include "../../RingBuffer.h"
+#include "../../RingBuffer.hpp"
 
 /**
  * @brief USART peripheral configuration

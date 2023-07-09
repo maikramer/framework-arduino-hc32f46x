@@ -141,6 +141,9 @@ void HardFault_IrqHandler()
 
     // - footer
     panic_printf("***\n\n");
+    
+    // - footer
+    panic_printf("Eita porra, panico\n\n");
 
     // end panic message and halt
     panic_end();
