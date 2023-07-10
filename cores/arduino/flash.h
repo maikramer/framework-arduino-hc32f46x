@@ -14,23 +14,23 @@ extern "C" {
 
 // use 256k to improve compatibility
 // 32 sectors, 8k bytes per sector
-#define FLASH_SECTOR_TOTAL    32
+#define FLASH_SECTOR_TOTAL    64
 #define FLASH_SECTOR_SIZE     ((uint32_t)(8*1024U))
 #define FLASH_ALL_START       0
-#define FLASH_ALL_END         ((uint32_t)0x0003FFFFU)
+#define FLASH_ALL_END         ((uint32_t)0x0007FFFFU)
 
 // use last sector to emulate eeprom
-#define FLASH_EEPROM_BASE     ((uint32_t)0x0003E000U)
+#define FLASH_EEPROM_BASE     ((uint32_t)0x0007E000U)
 
 
-#define FLASH_BASE            ((uint32_t)0x0003E000U)              /*!< FLASH base address in the alias region */
+#define FLASH_BASE            ((uint32_t)0x0007E000U)              /*!< FLASH base address in the alias region */
 
 // just use 1k bytes, not a full sector
 #define EEPROM_SIZE           1024
 
 
 // power outage
-#define FLASH_OUTAGE_DATA_ADDR  ((uint32_t)0x0003C000U)
+#define FLASH_OUTAGE_DATA_ADDR  ((uint32_t)0x0007C000U)
 
 
 

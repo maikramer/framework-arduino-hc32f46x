@@ -9,61 +9,63 @@
  * set flash latency and cache
  */
 inline void flash_init() {
-    stc_clk_xtal_cfg_t stcXtalCfg;
-    stc_clk_mpll_cfg_t stcMpllCfg;
-    en_clk_sys_source_t enSysClkSrc;
-    stc_clk_sysclk_cfg_t stcSysClkCfg;
 
-    MEM_ZERO_STRUCT(enSysClkSrc);
+    stc_clk_sysclk_cfg_t    stcSysClkCfg;
+    stc_clk_xtal_cfg_t      stcXtalCfg;
+    stc_clk_mpll_cfg_t      stcMpllCfg;
+    stc_sram_config_t       stcSramConfig;
+
     MEM_ZERO_STRUCT(stcSysClkCfg);
     MEM_ZERO_STRUCT(stcXtalCfg);
     MEM_ZERO_STRUCT(stcMpllCfg);
+    MEM_ZERO_STRUCT(stcSramConfig);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv4;
+    stcSysClkCfg.enHclkDiv  = ClkSysclkDiv1;
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;
     stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;
     stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;
     stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;
     stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv16;
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;
     CLK_SysClkConfig(&stcSysClkCfg);
 
-    CLK_SetPeriClkSource(ClkPeriSrcPclk);
-
-    /* Switch system clock source to MPLL. */
-    /* Use Xtal as MPLL source. */
+    /* Config Xtal and Enable Xtal */
     stcXtalCfg.enMode = ClkXtalModeOsc;
     stcXtalCfg.enDrv = ClkXtalLowDrv;
     stcXtalCfg.enFastStartup = Enable;
     CLK_XtalConfig(&stcXtalCfg);
     CLK_XtalCmd(Enable);
 
+    /* sram init include read/write wait cycle setting */
+    stcSramConfig.u8SramIdx = Sram12Idx | Sram3Idx | SramHsIdx | SramRetIdx;
+    stcSramConfig.enSramRC = SramCycle2;
+    stcSramConfig.enSramWC = SramCycle2;
+    SRAM_Init(&stcSramConfig);
+
     /* flash read wait cycle setting */
     EFM_Unlock();
     EFM_SetLatency(EFM_LATENCY_5);
-    EFM_InstructionCacheCmd(Enable);
     EFM_Lock();
 
-    /* Switch driver ability */
-    PWC_HS2HP();
-
-    /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1u; /* XTAL 8M / 1 */
-    stcMpllCfg.plln = 42u;   /* 8M*42 = 336M */
-    stcMpllCfg.PllpDiv = 2u; /* MLLP = 168M */
-    stcMpllCfg.PllqDiv = 2u; /* MLLQ = 168M */
-    stcMpllCfg.PllrDiv = 2u; /* MLLR = 168M */
+    /* MPLL config (XTAL / pllmDiv * plln / PllpDiv = 200M). */
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln    = 50ul;
+    stcMpllCfg.PllpDiv = 2ul;
+    stcMpllCfg.PllqDiv = 2ul;
+    stcMpllCfg.PllrDiv = 2ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
     /* Enable MPLL. */
     CLK_MpllCmd(Enable);
-
     /* Wait MPLL ready. */
-    while (Set != CLK_GetFlagStatus(ClkFlagMPLLRdy)) {
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
     }
-
+    /* Switch driver ability */
+    PWC_HS2HP();
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
 }

@@ -18,6 +18,7 @@
 #include <atomic>
 
 #define DEFAULT_BUFFER_SIZE 256
+
 template<size_t buffer_size = DEFAULT_BUFFER_SIZE>
 class RingBuffer {
 public:
@@ -60,7 +61,7 @@ public:
      * \return Number of free slots that can be be written
      */
     size_t capacity(void) const {
-        return buffer_size - (head - tail);
+        return buffer_size - count();
     }
 
     /*!
@@ -69,7 +70,7 @@ public:
      * \return True if data was pushed
      */
     bool push(uint8_t data) {
-        if ((head - tail) == buffer_size)
+        if (isFull())
             return false;
         else {
             data_buff[head++ & buffer_mask] = data;
@@ -83,7 +84,7 @@ public:
      * \return True if data was pushed
      */
     bool push(const uint8_t *data) {
-        if ((head - tail) == buffer_size)
+        if (isFull())
             return false;
         else {
             data_buff[head++ & buffer_mask] = *data;
@@ -101,7 +102,7 @@ public:
      * \return True if data was pushed and callback called
      */
     bool pushFromCallbackWhenAvailable(uint8_t (*get_data_callback)(void)) {
-        if ((head - tail) == buffer_size)
+        if (isFull())
             return false;
         else {
             // execute callback only when there is space in buffer
@@ -116,7 +117,7 @@ public:
      */
     bool pop() {
 
-        if (tail == head)
+        if (isEmpty())
             return false;
         else
             tail++;
@@ -152,7 +153,7 @@ public:
      * \return True if data was fetched from the internal buffer
      */
     bool pop(uint8_t *data) {
-        if (tail == head)
+        if (isEmpty())
             return false;
         else {
             *data = data_buff[tail++ & buffer_mask];
@@ -168,7 +169,7 @@ public:
      * \return Pointer to first element, nullptr if buffer was empty
      */
     uint8_t *peek() {
-        if (tail == head)
+        if (isEmpty())
             return nullptr;
         else
             return &data_buff[tail & buffer_mask];

@@ -182,10 +182,10 @@ void adc_disable_channel(const adc_device_t *device, const uint8_t adc_channel)
         return;
     }
 
-    ASSERT_CHANNEL_ID(device, adc_channel);
-
-    ADC_DEBUG_PRINTF(device, "disable channel %d\n", adc_channel);
-    ADC_DelAdcChannel(device->adc.register_base, adc_channel_to_mask(device, adc_channel));
+//    ASSERT_CHANNEL_ID(device, adc_channel);
+//
+//    ADC_DEBUG_PRINTF(device, "disable channel %d\n", adc_channel);
+//    ADC_DelAdcChannel(device->adc.register_base, adc_channel_to_mask(device, adc_channel));
 }
 
 //
