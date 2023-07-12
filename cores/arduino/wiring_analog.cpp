@@ -1,6 +1,6 @@
 #include "wiring_analog.h"
 #include "drivers/gpio/gpio.h" // includes drivers/adc/adc.h already
-
+#include "hc32_ddl.h"
 void analogReference(eAnalogReference ulMode)
 {
     // stub only for compatibility with existing AVR based API
@@ -22,5 +22,5 @@ uint32_t analogRead(uint32_t ulPin)
     }
 
     // read from adc channel synchronously
-    return adc_read_sync(adc_device, adc_channel);
+    return 0; // adc_read(adc_device, adc_channel);
 }

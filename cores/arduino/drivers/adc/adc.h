@@ -1,87 +1,106 @@
 #pragma once
-#include <hc32_ddl.h>
-#include "adc_config.h"
+
+
+#include "hc32_ddl.h"
+
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-    /**
-     * @brief ADC peripheral init
-     * @param device ADC device configuration
-     * @note if the device is initialized, this function will do nothing
-     */
-    void adc_init();
-    void adc_device_init(adc_device_t *device);
 
-#ifdef __cplusplus
-    // TODO: find out what unit sample_time is in...
-    /**
-     * @brief enable adc conversion channel
-     * @param device ADC device configuration
-     * @param adc_channel ADC channel to enable
-     * @param sample_time ADC sampling time
-     * @note requires adc_device_init() to be called first
-     */
-    void adc_enable_channel(const adc_device_t *device, const uint8_t adc_channel, uint8_t sample_time = 50);
-#else
-    void adc_enable_channel(const adc_device_t *device, const uint8_t adc_channel, uint8_t sample_time);
-#endif
 
-    /**
-     * @brief disable adc conversion channel
-     * @param device ADC device configuration
-     * @param adc_channel ADC channel to disable
-     * @note if adc_device_init() was not called before, this function will do nothing
-     */
-    void adc_disable_channel(const adc_device_t *device, const uint8_t adc_channel);
+#define BOARD_ADC_CH0_PORT       (PortC)
+#define BOARD_ADC_CH0_PIN        (Pin00)
+#define BOARD_ADC_CH0_CH         (ADC1_CH10)
 
-    /**
-     * @brief start asynchronous conversion
-     * @param device ADC device configuration
-     * @note requires adc_device_init() to be called first
-     */
-    void adc_start_conversion(const adc_device_t *device);
+#define BOARD_ADC_CH1_PORT       (PortC)
+#define BOARD_ADC_CH1_PIN        (Pin01)
+#define BOARD_ADC_CH1_CH         (ADC1_CH11)
 
-    /**
-     * @brief check if conversion is complete
-     * @param device ADC device configuration
-     * @return true if conversion is complete
-     * @note requires adc_device_init() to be called first
-     */
-    bool adc_is_conversion_completed(const adc_device_t *device);
+#define BOARD_ADC_CH2_PORT       (PortC)
+#define BOARD_ADC_CH2_PIN        (Pin02)
+#define BOARD_ADC_CH2_CH         (ADC1_CH12)
 
-    /**
-     * @brief wait for conversion to complete
-     * @param device ADC device configuration
-     * @note requires adc_device_init() to be called first
-     */
-    void adc_await_conversion_completed(const adc_device_t *device);
+/* Timer definition for this example. */
+#define TMR_UNIT                 (M4_TMR02)
 
-    /**
-     * @brief read asynchronous conversion result
-     * @param device ADC device configuration
-     * @param adc_channel ADC channel to read
-     * @return conversion result
-     * @note requires adc_device_init() to be called first
-     */
-    uint16_t adc_conversion_read_result(const adc_device_t *device, const uint8_t adc_channel);
+#define ADC_CHANNEL_COUNT 2u
+#define ADC1_SA_CHANNEL (ADC1_CH14 | ADC1_CH15)
+#define ADC1_SA_CHANNEL_COUNT (ADC_CHANNEL_COUNT)
 
-    /**
-     * @brief start adc conversion and wait for result synchronously
-     * @param device ADC device configuration
-     * @param adc_channel ADC channel to read
-     * @return conversion result
-     * @note requires adc_device_init() to be called first
-     */
-    inline uint16_t adc_read_sync(const adc_device_t *device, const uint8_t adc_channel)
-    {
-        adc_start_conversion(device);
-        adc_await_conversion_completed(device);
-        return adc_conversion_read_result(device, adc_channel);
-    }
+// ADC irq flag bit mask
+#define ADC1_SA_DMA_IRQ_BIT (1ul << 0u)
 
-    extern uint16_t g_adc_value[3];
+//
+// ADC device definition
+//
+typedef struct adc_device_t {
+    __IO uint32_t
+    HAL_AdcDmaIrqFlag;
+    __IO uint16_t
+    HAL_adc_results[ADC1_CH_COUNT];
+
+    M4_ADC_TypeDef *regs;
+    __IO uint32_t
+    PeriphClock;
+    __IO uint32_t
+    Channel;
+
+    M4_DMA_TypeDef *DMARegs;
+    __IO uint32_t
+    DMAPeriphClock;
+    __IO uint8_t
+    DMAChannel;
+    __IO en_event_src_t
+    DMAenSrc;
+} adc_device_t;
+
+extern adc_device_t ADC1_device;
+extern struct adc_device_t *ADC1;
+extern stc_adc_init_t stcAdcInit;
+
+extern uint16_t AdcCH0SampleBuf[256];
+extern uint16_t AdcCH1SampleBuf[256];
+extern uint16_t AdcCH2SampleBuf[256];
+
+extern uint32_t AdcCH0Value;
+extern uint32_t AdcCH1Value;
+extern uint32_t AdcCH2Value;
+
+extern uint16_t g_adc_value[3];
+extern uint8_t g_adc_idx;
+
+void adc_init(void);
+
+void adc_pin_init(void);
+
+void AdcClockConfig(void);
+
+void AdcInitConfig(void);
+
+void AdcChannelConfig(void);
+
+void AdcTriggerConfig(void);
+
+
+void AdcSetChannelPinMode(const M4_ADC_TypeDef *ADCx,
+                                 uint32_t u32Channel,
+                                 en_pin_mode_t enMode);
+
+void AdcSetPinMode(uint8_t u8AdcPin, en_pin_mode_t enMode);
+
+void adc_dma_config(void);
+
+
+void BSP_DMA2CH0_TcIrqHander(void);
+
+void BSP_DMA2CH1_TcIrqHander(void);
+
+void BSP_DMA2CH2_TcIrqHander(void);
+
+
+void AdcConfig(void);
 
 #ifdef __cplusplus
 }

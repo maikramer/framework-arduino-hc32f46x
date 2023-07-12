@@ -33,9 +33,10 @@
 #define WRITE(IO, V) (((V) > 0) ? GPIO_SetBits(IO) : GPIO_ResetBits(IO))
 #define TOGGLE(IO) (GPIO_Toggle(IO))
 
-#define _GET_MODE(IO) getPinMode(IO)
-#define _SET_MODE(IO, M) pinMode(IO, M)
-#define _SET_OUTPUT(IO) _SET_MODE(IO, OUTPUT)
+#define _GET_MODE(IO)       getPinMode(IO)
+#define _SET_MODE(IO, M)    pinMode(IO, M)
+#define _SET_OUTPUT(IO)     _SET_MODE(IO, OUTPUT)
+#define SET_PWM(IO)         _SET_OUTPUT(IO)
 
 #define OUT_WRITE(IO, V) \
   do                     \

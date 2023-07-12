@@ -19,15 +19,15 @@ void pinMode(uint32_t dwPin, uint32_t dwMode)
         if (dwMode == INPUT_ANALOG)
         {
             // initialize adc device (if already initialized, this will do nothing)
-            adc_device_init(adc_device);
+//            adc_init();
 
             // enable ADC channel
-            adc_enable_channel(adc_device, adc_channel);
+//            adc_enable_channel(adc_device, adc_channel);
         }
         else
         {
             // disable ADC channel
-            adc_disable_channel(adc_device, adc_channel);
+//            adc_disable_channel(adc_device, adc_channel);
         }
     }
 
