@@ -27,6 +27,8 @@
 
 #include <stdint.h>
 #include <wirish.h>
+#include "wiring_constants.h"
+#include "variant.h"
 
 // SPI_HAS_TRANSACTION means SPI has
 //   - beginTransaction()

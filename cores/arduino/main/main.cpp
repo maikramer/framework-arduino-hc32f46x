@@ -16,20 +16,19 @@
 #include <stdarg.h>
 
 //For serial testing
-HardwareSerial debug{&USART2_config, PA2, PA3};
+#define debug Serial2
 
-void UsartTest(){
-    debug.begin(115200);
-    debug.printf("Teste : %s", "Eu to so testando essa merda pra ver se vai");
+void TMCTest(){
+    Serial1.begin(115200);
     int msgSize = 0;
     while (1) {
         delay(1000);
-        msgSize = debug.available();
+        msgSize = Serial1.available();
         debug.printf("Available: %d", msgSize);
         if (msgSize > 0) {
             auto str = debug.readString();
             delay(100);
-            debug.printf("Teste : %s", str.c_str());
+            Serial1.print(str.c_str());
         }
     }
 }
@@ -68,6 +67,9 @@ int main(void) {
     // SysTick configuration
     SysTick_Init(1000u);
 
+
+
+   // while(1);
     setup();
     core_hook_post_setup();
 

@@ -21,13 +21,25 @@
 
 #include "drivers/gpio/gpio.h"
 
+typedef enum WiringPinMode {
+    OUTPUT,
+    OUTPUT_OPEN_DRAIN,
+    INPUT,
+    INPUT_ANALOG,
+    INPUT_PULLUP,
+    INPUT_PULLDOWN,
+    INPUT_FLOATING,
+    PWM,
+    PWM_OPEN_DRAIN,
+} WiringPinMode;
+
 /**
  * \brief Configures the specified pin to behave either as an input or an output. See the description of digital pins for details.
  *
  * \param ulPin The number of the pin whose mode you wish to set
  * \param ulMode Can be INPUT, OUTPUT, INPUT_PULLUP or INPUT_PULLDOWN
  */
-extern void pinMode( uint32_t dwPin, uint32_t dwMode ) ;
+extern void pinMode( uint32_t dwPin, WiringPinMode dwMode ) ;
 
 /**
  * \brief get the current pin mode
@@ -35,7 +47,7 @@ extern void pinMode( uint32_t dwPin, uint32_t dwMode ) ;
  * \param dwPin The number of the pin whose mode you wish to get
  * \return the current pin mode. Can be INPUT, OUTPUT, INPUT_PULLUP or INPUT_PULLDOWN
 */
-extern uint32_t getPinMode( uint32_t dwPin) ;
+extern WiringPinMode getPinMode( uint32_t dwPin) ;
 
 /**
  * \brief Write a HIGH or a LOW value to a digital pin.

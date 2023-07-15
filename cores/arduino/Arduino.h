@@ -41,12 +41,13 @@ extern "C"{
 #include "wiring_constants.h"
 #include "yield.h"
 
-  /* system functions */
-int main( void );
+/* system functions */
+int main(void);
 
-  /* sketch */
-void setup( void ) ;
-void loop( void ) ;
+/* sketch */
+void setup(void);
+
+void loop(void);
 
 #include "drivers/gpio/gpio.h"
 
@@ -63,7 +64,9 @@ void loop( void ) ;
 #include "HardwareSerial.h"
 #include "pulse.h"
 #endif
+
 #include "delay.h"
+
 #ifdef __cplusplus
 #include "drivers/usart/usart.h"
 #endif
@@ -79,14 +82,18 @@ void loop( void ) ;
 #undef abs
 #endif // abs
 
-constexpr uint32_t min(uint32_t a, uint32_t b)
+constexpr uint32_t
+min(uint32_t
+a,
+uint32_t b
+)
 {
-  return (a) < (b) ? (a) : (b);
+return (a) < (b) ? (a) : (b);
 }
 
-#define max(a,b) ((a)>(b)?(a):(b))
+#define max(a, b) ((a)>(b)?(a):(b))
 #define abs(x) ((x)>0?(x):-(x))
-#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
+#define constrain(amt, low, high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 #define round(x)     ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
 #define radians(deg) ((deg)*DEG_TO_RAD)
 #define degrees(rad) ((rad)*RAD_TO_DEG)
@@ -95,12 +102,15 @@ constexpr uint32_t min(uint32_t a, uint32_t b)
 static inline void nvic_globalirq_enable() {
     asm volatile("cpsie i");
 }
+
 static inline void nvic_globalirq_disable() {
     asm volatile("cpsid i");
 }
+
 static inline void interrupts() {
     nvic_globalirq_enable();
 }
+
 static inline void noInterrupts() {
     nvic_globalirq_disable();
 }
@@ -119,13 +129,12 @@ static inline void noInterrupts() {
 #include "drivers/sysclock/sysclock.h"
 // extern uint32_t F_CPU;
 #ifdef BOARD_F_CPU
-  #undef F_CPU
-  #define F_CPU BOARD_F_CPU
+#undef F_CPU
+constexpr uint32_t F_CPU = BOARD_F_CPU;
 #endif
-#define CYCLES_PER_MICROSECOND  (F_CPU / 1000000UL)
 
-#define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )
-#define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )
-#define microsecondsToClockCycles(a) ( (a) * (F_CPU / 1000000L) )
+#define clockCyclesPerMicrosecond() ( F_CPU / 1000000LL )
+#define clockCyclesToMicroseconds(a) ( ((a) * 1000LL) / (F_CPU / 1000LL) )
+#define microsecondsToClockCycles(a) ( (a) * (F_CPU / 1000000LL) )
 
 #endif // Arduino_h

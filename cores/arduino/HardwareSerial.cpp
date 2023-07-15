@@ -3,6 +3,16 @@
 #include "drivers/gpio/gpio.h"
 #include <stdarg.h>
 
+//
+// global instances
+//
+#ifndef DISABLE_SERIAL_GLOBALS
+HardwareSerial Serial1(&USART1_config, VARIANT_USART1_TX_PIN, VARIANT_USART1_RX_PIN);
+HardwareSerial Serial2(&USART2_config, VARIANT_USART2_TX_PIN, VARIANT_USART2_RX_PIN);
+HardwareSerial Serial3(&USART3_config, VARIANT_USART3_TX_PIN, VARIANT_USART3_RX_PIN);
+HardwareSerial Serial4(&USART4_config, VARIANT_USART4_TX_PIN, VARIANT_USART4_RX_PIN);
+#endif
+
 HardwareSerial::HardwareSerial(struct usart_config_t *config,
                                uint8_t tx_pin,
                                uint8_t rx_pin) {

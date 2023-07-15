@@ -5,8 +5,8 @@
 
 #define HSERIAL_PRINTF_BUFFER_SIZE 256
 
-typedef uint8_t tx_buffer_index_t;
-typedef uint8_t rx_buffer_index_t;
+typedef uint16_t tx_buffer_index_t;
+typedef uint16_t rx_buffer_index_t;
 
 #define DEFINE_HWSERIAL(name, n)                 \
     HardwareSerial name(USART##n,                \
@@ -52,3 +52,15 @@ public:
     uint8_t tx_pin;
     uint8_t rx_pin;
 };
+
+//
+// global instances
+//
+#ifndef DISABLE_SERIAL_GLOBALS
+extern HardwareSerial Serial1;
+extern HardwareSerial Serial2;
+extern HardwareSerial Serial3;
+extern HardwareSerial Serial4;
+
+#define Serial Serial1
+#endif

@@ -26,7 +26,7 @@ extern "C" {
 #define FLASH_BASE            ((uint32_t)0x0007E000U)              /*!< FLASH base address in the alias region */
 
 // just use 1k bytes, not a full sector
-#define EEPROM_SIZE           1024
+#define EEPROM_SIZE           4096
 
 
 // power outage

@@ -192,17 +192,20 @@ void usart_enable(struct usart_config_t *config) {
     NVIC_EnableIRQ(irqConf.enIRQn);
 
     // set rx error IRQ
-    irqConf.enIRQn = IRQ_INDEX_INT_USART1_EI;
     if (reg == M4_USART1) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART1_EI;
         irqConf.enIntSrc = INT_USART1_EI;
         irqConf.pfnCallback = &Usart1ErrIrqCallback;
     } else if (reg == M4_USART2) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART2_EI;
         irqConf.enIntSrc = INT_USART2_EI;
         irqConf.pfnCallback = &Usart2ErrIrqCallback;
     } else if (reg == M4_USART3) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART3_EI;
         irqConf.enIntSrc = INT_USART3_EI;
         irqConf.pfnCallback = &Usart3ErrIrqCallback;
     } else if (reg == M4_USART4) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART4_EI;
         irqConf.enIntSrc = INT_USART4_EI;
         irqConf.pfnCallback = &Usart4ErrIrqCallback;
     }
@@ -212,17 +215,20 @@ void usart_enable(struct usart_config_t *config) {
     NVIC_EnableIRQ(irqConf.enIRQn);
 
     // set tx IRQ
-    irqConf.enIRQn = IRQ_INDEX_INT_USART1_TI;
     if (reg == M4_USART1) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART1_TI;
         irqConf.enIntSrc = INT_USART1_TI;
         irqConf.pfnCallback = &Usart1TxIrqCallback;
     } else if (reg == M4_USART2) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART2_TI;
         irqConf.enIntSrc = INT_USART2_TI;
         irqConf.pfnCallback = &Usart2TxIrqCallback;
     } else if (reg == M4_USART3) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART3_TI;
         irqConf.enIntSrc = INT_USART3_TI;
         irqConf.pfnCallback = &Usart3TxIrqCallback;
     } else if (reg == M4_USART4) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART4_TI;
         irqConf.enIntSrc = INT_USART4_TI;
         irqConf.pfnCallback = &Usart4TxIrqCallback;
     }
@@ -232,17 +238,20 @@ void usart_enable(struct usart_config_t *config) {
     NVIC_EnableIRQ(irqConf.enIRQn);
 
     // set tx complete IRQ
-    irqConf.enIRQn = IRQ_INDEX_INT_USART1_TCI;
     if (reg == M4_USART1) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART1_TCI;
         irqConf.enIntSrc = INT_USART1_TCI;
         irqConf.pfnCallback = &Usart1TxCmpltIrqCallback;
     } else if (reg == M4_USART2) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART2_TCI;
         irqConf.enIntSrc = INT_USART2_TCI;
         irqConf.pfnCallback = &Usart2TxCmpltIrqCallback;
     } else if (reg == M4_USART3) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART3_TCI;
         irqConf.enIntSrc = INT_USART3_TCI;
         irqConf.pfnCallback = &Usart3TxCmpltIrqCallback;
     } else if (reg == M4_USART4) {
+        irqConf.enIRQn = IRQ_INDEX_INT_USART4_TCI;
         irqConf.enIntSrc = INT_USART4_TCI;
         irqConf.pfnCallback = &Usart4TxCmpltIrqCallback;
     }
@@ -271,7 +280,7 @@ void usart_enable(struct usart_config_t *config) {
         USART_FuncCmd(M4_USART4, UsartRx, Enable);
         USART_FuncCmd(M4_USART4, UsartTx, Enable);
         USART_FuncCmd(M4_USART4, UsartRxInt, Enable);
-        // USART_FuncCmd(M4_USART4, UsartTxCmpltInt, Enable);
+        USART_FuncCmd(M4_USART4, UsartTxCmpltInt, Enable);
     }
 }
 

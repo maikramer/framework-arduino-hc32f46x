@@ -3,7 +3,7 @@
 #include "../../RingBuffer.hpp"
 
 #ifndef SERIAL_BUFFER_SIZE
-#define SERIAL_BUFFER_SIZE 4096
+#define SERIAL_BUFFER_SIZE 2048
 #endif
 
 class UsartBuffer : public RingBuffer<SERIAL_BUFFER_SIZE>

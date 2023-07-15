@@ -3,7 +3,7 @@
 #include "drivers/adc/adc.h"
 #include "wiring_constants.h"
 
-void pinMode(uint32_t dwPin, uint32_t dwMode)
+void pinMode(uint32_t dwPin, WiringPinMode dwMode)
 {
     if (dwPin >= BOARD_NR_GPIO_PINS)
     {
@@ -58,7 +58,7 @@ void pinMode(uint32_t dwPin, uint32_t dwMode)
     GPIO_Init(dwPin, &pinConf);
 }
 
-uint32_t getPinMode(uint32_t dwPin)
+WiringPinMode getPinMode(uint32_t dwPin)
 {
     if (dwPin >= BOARD_NR_GPIO_PINS)
     {

@@ -73,7 +73,7 @@ void SoftwareSerial::setSpeed(uint32_t speed)
       // Disable the timer
       uint32_t clock_rate, cmp_value;
       // Get timer clock
-      clock_rate = (F_CPU);
+      clock_rate =  get_pclk1Freq();
       int pre = 1;
       // Calculate prescale an compare value
       do {
