@@ -20,6 +20,7 @@
  *
  */
 #pragma once
+
 #include <stdint.h>
 #include "bsp_timer.h"
 #include "hc32f460_timer0.h"
@@ -27,7 +28,6 @@
 //
 // Timer Types
 //
-typedef en_tim0_channel_t timer_channel_t;
 typedef uint32_t hal_timer_t;
 #define HAL_TIMER_TYPE_MAX UINT16_MAX
 
@@ -36,16 +36,15 @@ typedef uint32_t hal_timer_t;
 //
 
 // frequency of the timer peripheral
-#define HAL_TIMER_RATE uint32_t(F_CPU)
+#define HAL_TIMER_RATE (F_CPU/2)
 
-// temperature timer (Timer0 Unit1 Channel A)
-#define TEMP_TIMER_NUM Tim0_ChannelA
-#define TEMP_TIMER_PRESCALE 16
+// temperature timer (Timer41)
+#define TEMP_TIMER_NUM 1
 #define TEMP_TIMER_RATE 1000 // 1kHz
 #define TEMP_TIMER_FREQUENCY TEMP_TIMER_RATE // alias for Marlin
 
-// stepper timer (Timer0 Unit1 Channel B)
-#define STEP_TIMER_NUM Tim0_ChannelB
+// stepper timer (Timer42)
+#define STEP_TIMER_NUM 0
 #define STEPPER_TIMER_PRESCALE 16
 #define STEPPER_TIMER_RATE (HAL_TIMER_RATE / STEPPER_TIMER_PRESCALE)
 #define STEPPER_TIMER_TICKS_PER_US (STEPPER_TIMER_RATE / 1000000)
@@ -65,14 +64,21 @@ typedef uint32_t hal_timer_t;
 //
 // HAL functions
 //
-void HAL_timer_start(const timer_channel_t timer_num, const uint32_t frequency);
-void HAL_timer_enable_interrupt(const timer_channel_t timer_num);
-void HAL_timer_disable_interrupt(const timer_channel_t timer_num);
-bool HAL_timer_interrupt_enabled(const timer_channel_t timer_num);
-void HAL_timer_set_compare(const timer_channel_t timer_num, const hal_timer_t compare);
-hal_timer_t HAL_timer_get_count(const timer_channel_t timer_num);
-void HAL_timer_isr_prologue(const timer_channel_t timer_num);
-void HAL_timer_isr_epilogue(const timer_channel_t timer_num);
+void HAL_timer_start(const uint8_t timer_num, const uint32_t frequency);
+
+void HAL_timer_enable_interrupt(const uint8_t timer_num);
+
+void HAL_timer_disable_interrupt(const uint8_t timer_num);
+
+bool HAL_timer_interrupt_enabled(const uint8_t timer_num);
+
+void HAL_timer_set_compare(const uint8_t timer_num, const hal_timer_t compare);
+
+hal_timer_t HAL_timer_get_count(const uint8_t timer_num);
+
+void HAL_timer_isr_prologue(const uint8_t timer_num);
+
+void HAL_timer_isr_epilogue(const uint8_t timer_num);
 
 //
 // HAL function aliases

@@ -78,10 +78,18 @@ usart_config_t USART3_config = {
         .tx_pin_function = Func_Usart3_Tx,
         .rx_pin_function = Func_Usart3_Rx},
     .interrupts = {
-        .rx_data_available = {.interrupt_priority = DDL_IRQ_PRIORITY_DEFAULT, .interrupt_source = INT_USART3_RI},
-        .rx_error = {.interrupt_priority = DDL_IRQ_PRIORITY_DEFAULT, .interrupt_source = INT_USART3_EI},
-        .tx_buffer_empty = {.interrupt_priority = DDL_IRQ_PRIORITY_DEFAULT, .interrupt_source = INT_USART3_TI},
-        .tx_complete = {.interrupt_priority = DDL_IRQ_PRIORITY_DEFAULT, .interrupt_source = INT_USART3_TCI},
+        .rx_data_available = {
+            .interrupt_priority = DDL_IRQ_PRIORITY_DEFAULT,
+            .interrupt_source = INT_USART3_RI},
+        .rx_error = {
+            .interrupt_priority = DDL_IRQ_PRIORITY_DEFAULT,
+            .interrupt_source = INT_USART3_EI},
+        .tx_buffer_empty = {
+            .interrupt_priority = DDL_IRQ_PRIORITY_DEFAULT,
+            .interrupt_source = INT_USART3_TI},
+        .tx_complete = {
+            .interrupt_priority = DDL_IRQ_PRIORITY_DEFAULT,
+            .interrupt_source = INT_USART3_TCI},
     },
     .state = {
         .rx_buffer = new UsartBuffer(),

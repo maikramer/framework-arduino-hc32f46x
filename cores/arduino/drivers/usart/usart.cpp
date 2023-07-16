@@ -2,8 +2,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#define PRINTF_BUFFER_SIZE 256
-#define USART_PRIORITY 1
+#define PRINTF_BUFFER_SIZE 512
 
 //
 // USART1_config callbacks
@@ -187,7 +186,7 @@ void usart_enable(struct usart_config_t *config) {
     }
 
     enIrqRegistration(&irqConf);
-    NVIC_SetPriority(irqConf.enIRQn, USART_PRIORITY);
+    NVIC_SetPriority(irqConf.enIRQn, config->interrupts.rx_data_available.interrupt_priority);
     NVIC_ClearPendingIRQ(irqConf.enIRQn);
     NVIC_EnableIRQ(irqConf.enIRQn);
 
@@ -210,7 +209,7 @@ void usart_enable(struct usart_config_t *config) {
         irqConf.pfnCallback = &Usart4ErrIrqCallback;
     }
     enIrqRegistration(&irqConf);
-    NVIC_SetPriority(irqConf.enIRQn, USART_PRIORITY);
+    NVIC_SetPriority(irqConf.enIRQn, config->interrupts.rx_error.interrupt_priority);
     NVIC_ClearPendingIRQ(irqConf.enIRQn);
     NVIC_EnableIRQ(irqConf.enIRQn);
 
@@ -233,7 +232,7 @@ void usart_enable(struct usart_config_t *config) {
         irqConf.pfnCallback = &Usart4TxIrqCallback;
     }
     enIrqRegistration(&irqConf);
-    NVIC_SetPriority(irqConf.enIRQn, USART_PRIORITY);
+    NVIC_SetPriority(irqConf.enIRQn, config->interrupts.tx_buffer_empty.interrupt_priority);
     NVIC_ClearPendingIRQ(irqConf.enIRQn);
     NVIC_EnableIRQ(irqConf.enIRQn);
 
@@ -256,7 +255,7 @@ void usart_enable(struct usart_config_t *config) {
         irqConf.pfnCallback = &Usart4TxCmpltIrqCallback;
     }
     enIrqRegistration(&irqConf);
-    NVIC_SetPriority(irqConf.enIRQn, USART_PRIORITY);
+    NVIC_SetPriority(irqConf.enIRQn, config->interrupts.tx_complete.interrupt_priority);
     NVIC_ClearPendingIRQ(irqConf.enIRQn);
     NVIC_EnableIRQ(irqConf.enIRQn);
 

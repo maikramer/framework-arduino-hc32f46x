@@ -45,6 +45,7 @@ extern "C"
 USART_DEV_VARS(1)
 USART_DEV_VARS(2)
 USART_DEV_VARS(3)
+USART_DEV_VARS(4)
 
 // public api
 void usart_init(struct usart_config_t *config);

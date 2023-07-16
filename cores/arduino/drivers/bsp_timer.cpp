@@ -14,8 +14,6 @@
 #define IRQ_INDEX_INT_TMR41_GCMB        Int023_IRQn
 #define IRQ_INDEX_INT_TMR42_GCMB        Int024_IRQn
 
-extern volatile uint32_t uptime;
-
 /*!< Parameter validity check for Timer4 unit  */
 #define IS_VALID_TIMER4(__TMRx__) \
   ((M4_TMR41 == (__TMRx__)) ||    \
@@ -45,79 +43,19 @@ static en_result_t TIMER4_CNT_Load(M4_TMR4_TypeDef *TMR4x, stc_timer4_cnt_init_t
     return enRet;
 }
 
-void Timer02A_CallBack(void) {
-//    PORT_Toggle(PortA, Pin01);
-    uptime++;
-}
-
-void timer02A_init(void) {
-    // get pclk1 frequency
-    stc_clk_freq_t clkInfo;
-    CLK_GetClockFreq(&clkInfo);
-    uint32_t pclk1Freq = clkInfo.pclk1Freq;
-
-    // enable Timer0 peripheral
-    PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM02, Enable);
-
-    // configure timer channel
-    stc_tim0_base_init_t timerConf;
-    MEM_ZERO_STRUCT(timerConf);
-    timerConf.Tim0_CounterMode = Tim0_Sync;
-    timerConf.Tim0_SyncClockSource = Tim0_Pclk1;
-    timerConf.Tim0_ClockDivision = Tim0_ClkDiv1024;
-    timerConf.Tim0_CmpValue = (uint16_t)(pclk1Freq / 1024ul / 1000);
-
-    TIMER0_BaseInit(TMR_UNIT, Tim0_ChannelA, &timerConf);
-
-    stc_irq_regi_conf_t stcIrqRegiConf;
-
-    MEM_ZERO_STRUCT(stcIrqRegiConf);
-
-    /* Register TMR_INI_GCMB Int to Vect.No.002 */
-    stcIrqRegiConf.enIRQn = IRQ_INDEX_INT_TMR02_GCMA;
-    /* Select I2C Error or Event interrupt function */
-    stcIrqRegiConf.enIntSrc = INT_TMR02_GCMA;
-    /* Callback function */
-    stcIrqRegiConf.pfnCallback = &Timer02A_CallBack;
-    /* Registration IRQ */
-    enIrqRegistration(&stcIrqRegiConf);
-    /* Clear Pending */
-    NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);
-    /* Set priority */
-    NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_15);
-    /* Enable NVIC */
-    NVIC_EnableIRQ(stcIrqRegiConf.enIRQn);
-
-    TIMER0_IntCmd(TMR_UNIT, Tim0_ChannelA, Enable);
-
-    TIMER0_Cmd(TMR_UNIT, Tim0_ChannelA, Enable);
-}
-
 extern void Timer01B_CallBack(void);
-//void Timer01B_CallBack(void)
-//{
-//    PORT_Toggle(PortA, Pin04);
-//}
 
 void timer01B_init(void) {
-    stc_clk_freq_t clkInfo;
-
-    uint32_t pclk1Freq;
-
     stc_tim0_base_init_t timerConf;
 
     MEM_ZERO_STRUCT(timerConf);
 
     PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM01, Enable);
 
-// Get pclk1
-    CLK_GetClockFreq(&clkInfo);
-    pclk1Freq = clkInfo.pclk1Freq;
-
     timerConf.Tim0_CounterMode = Tim0_Sync;
     timerConf.Tim0_SyncClockSource = Tim0_Pclk1;
     timerConf.Tim0_ClockDivision = Tim0_ClkDiv1024;
-    timerConf.Tim0_CmpValue = (uint16_t)(pclk1Freq / 1024ul / 1000);
+    timerConf.Tim0_CmpValue = (uint16_t)(SYSTEM_CLOCK_FREQUENCIES.pclk1 / 1024ul / 1000);
     TIMER0_BaseInit(M4_TMR01, Tim0_ChannelB, &timerConf);
 
     stc_irq_regi_conf_t stcIrqRegiConf;
@@ -145,13 +83,7 @@ void timer01B_init(void) {
 }
 
 void timer01B_set_overflow(uint16_t ms) {
-    uint32_t pclk1Freq;
-    stc_clk_freq_t clkInfo;
-
-    CLK_GetClockFreq(&clkInfo);
-    pclk1Freq = clkInfo.pclk1Freq;
-
-    M4_TMR01->CMPBR_f.CMPB = (uint16_t)(pclk1Freq / 1024ul / 1000 * ms);
+    M4_TMR01->CMPBR_f.CMPB = (uint16_t)(((SYSTEM_CLOCK_FREQUENCIES.pclk1 / 1024ul) / 1000) * ms);
 
     TIMER0_Cmd(M4_TMR01, Tim0_ChannelB, Enable);
 }
@@ -168,26 +100,17 @@ void timer01B_disable(void) {
 extern void Timer02B_CallBack(void);
 
 void timer02B_init(void) {
-    stc_clk_freq_t clkInfo;
-
-    // uint32_t pclk1Freq;
-
     stc_tim0_base_init_t timerConf;
 
     MEM_ZERO_STRUCT(timerConf);
 
     PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM02, Enable);
 
-// Get pclk1
-    CLK_GetClockFreq(&clkInfo);
-    uint32_t pclk1Freq = clkInfo.pclk1Freq;
-
     timerConf.Tim0_CounterMode = Tim0_Sync;
     timerConf.Tim0_SyncClockSource = Tim0_Pclk1;
     timerConf.Tim0_ClockDivision = Tim0_ClkDiv0;
-//  timerConf.Tim0_CmpValue = (uint16_t)((pclk1Freq / prescaler) / frequency);
-    timerConf.Tim0_CmpValue = (uint16_t)(pclk1Freq / (SS_BAUDRATE * 3));
-    TIMER0_BaseInit(TMR_UNIT, Tim0_ChannelB, &timerConf);
+    timerConf.Tim0_CmpValue = (uint16_t)(SYSTEM_CLOCK_FREQUENCIES.pclk1 / (SS_BAUDRATE * 3));
+    TIMER0_BaseInit(TMR_SSERIAL_UNIT, Tim0_ChannelB, &timerConf);
 
     stc_irq_regi_conf_t stcIrqRegiConf;
 
@@ -204,44 +127,14 @@ void timer02B_init(void) {
     /* Clear Pending */
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);
     /* Set priority */
-    NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_15);
+    NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
     /* Enable NVIC */
     NVIC_EnableIRQ(stcIrqRegiConf.enIRQn);
 
-    TIMER0_IntCmd(TMR_UNIT, Tim0_ChannelB, Enable);
+    TIMER0_IntCmd(TMR_SSERIAL_UNIT, Tim0_ChannelB, Enable);
 
-    TIMER0_Cmd(TMR_UNIT, Tim0_ChannelB, Disable);
+    TIMER0_Cmd(TMR_SSERIAL_UNIT, Tim0_ChannelB, Enable);
 }
-
-uint32_t get_pclk1Freq(void) {
-    stc_clk_freq_t clkInfo;
-
-    CLK_GetClockFreq(&clkInfo);
-
-    return (clkInfo.pclk1Freq);
-}
-
-void set_timer_overflow(uint16_t overflow) {
-//    TIMER0_BaseInit(TMR_UNIT, Tim0_ChannelB, &timerConf);
-    M4_TMR02->CMPBR_f.CMPB = overflow;
-}
-
-void set_timer_clk_prescale(en_tim0_clock_div div) {
-
-//    TIMER0_BaseInit(TMR_UNIT, Tim0_ChannelB, &timerConf);
-}
-
-// moved to hal/stm32/timers.h
-//void timer41_zero_match_irq_cb(void)
-//{
-//    static uint32_t u32IrqCnt = 0ul;
-
-//    PORT_Toggle(PortA, Pin01);
-
-//    TIMER4_CNT_ClearIrqFlag(M4_TMR41, Timer4CntZeroMatchInt);
-//}
-
-#define TIMER41_CNT_CYCLE_VAL 65535
 
 void timer41_init(void) {
     stc_irq_regi_conf_t irqConf;
@@ -255,10 +148,8 @@ void timer41_init(void) {
     stcCntInit.enBufferCmd = Disable;
     stcCntInit.enClk = Timer4CntPclk;
     stcCntInit.enClkDiv = Timer4CntPclkDiv2;
-//    stcCntInit.u16Cycle = get_pclk1Freq() / (1 << stcCntInit.enClkDiv) * period;
-//    stcCntInit.u16Cycle = 100000000UL / (1 << 1) * 0.001 = 50000; // 1ms
-//    stcCntInit.u16Cycle = 84000000UL / (1 << 1) * 0.001 = 42000; // 1ms
-    stcCntInit.u16Cycle = 42000; // 1 ms
+    stcCntInit.u16Cycle =
+            (SYSTEM_CLOCK_FREQUENCIES.pclk1 / (1 << stcCntInit.enClkDiv)) / 1000ul;
     stcCntInit.enCntMode = Timer4CntSawtoothWave;
     stcCntInit.enZeroIntCmd = Enable;
     stcCntInit.enPeakIntCmd = Disable;
@@ -285,16 +176,23 @@ void timer41_init(void) {
     TIMER4_CNT_Start(M4_TMR41);
 }
 
-// moved to hal/stm32/timers.h
-//void timer42_zero_match_irq_cb(void)
-//{
-//    static uint32_t u32IrqCnt = 0ul;
+void timer41_set_frequency(const uint32_t frequency) {
+    stc_timer4_cnt_init_t stcCntInit;
 
-//    (++u32IrqCnt & 0x00000001ul) ? LED_ON() : LED_OFF();
-//    PORT_Toggle(PortA, Pin04);
+    MEM_ZERO_STRUCT(stcCntInit);
 
-//    TIMER4_CNT_ClearIrqFlag(M4_TMR42, Timer4CntZeroMatchInt);
-//}
+    TIMER4_CNT_Load(M4_TMR41, &stcCntInit);
+    stcCntInit.enClkDiv = Timer4CntPclkDiv2;
+    stcCntInit.u16Cycle = SYSTEM_CLOCK_FREQUENCIES.pclk1 / (1 << stcCntInit.enClkDiv) / frequency;
+
+    TIMER4_CNT_Init(M4_TMR41, &stcCntInit);
+
+    TIMER4_CNT_Start(M4_TMR41);
+}
+
+uint16_t timer41_get_count() {
+    return TIMER4_CNT_GetCountVal(M4_TMR41);
+}
 
 #define TIMER42_CNT_CYCLE_VAL 65534
 
@@ -309,7 +207,7 @@ void timer42_init(void) {
 
     stcCntInit.enBufferCmd = Disable;
     stcCntInit.enClk = Timer4CntPclk;
-    stcCntInit.enClkDiv = Timer4CntPclkDiv8;
+    stcCntInit.enClkDiv = Timer4CntPclkDiv16;
     stcCntInit.u16Cycle = TIMER42_CNT_CYCLE_VAL;
     stcCntInit.enCntMode = Timer4CntSawtoothWave;
     stcCntInit.enZeroIntCmd = Enable;
@@ -339,40 +237,12 @@ void timer42_init_check(void) {
 }
 
 void timer42_set_frequency(const uint32_t frequency) {
-    // uint32_t u32Cycle = 0;
-    // uint8_t u8ClkDiv = 0;
-
     stc_timer4_cnt_init_t stcCntInit;
 
     MEM_ZERO_STRUCT(stcCntInit);
 
     TIMER4_CNT_Load(M4_TMR42, &stcCntInit);
-
-#if 0
-    stcCntInit.enClkDiv = Timer4CntPclkDiv1;
-
-    u32Cycle = get_pclk1Freq() / (2 << stcCntInit.enClkDiv) / frequency;
-    u8ClkDiv = (uint8_t)stcCntInit.enClkDiv;
-
-    while(u32Cycle > 65534UL) {
-        u8ClkDiv++;
-        stcCntInit.enClkDiv = (en_timer4_cnt_clk_div_t)u8ClkDiv;
-        u32Cycle = get_pclk1Freq() / (2 << stcCntInit.enClkDiv) / frequency;
-        printf("enClkDiv: %d\n", stcCntInit.enClkDiv);
-    }
-
-    stcCntInit.u16Cycle = (uint16_t)u32Cycle;
-
-    printf("u16Cycle: %d\n", stcCntInit.u16Cycle);
-
-#else   // use fixed clock division
-// STEPPER_TIMER_PRESCALE = 16
-
-    stcCntInit.enClkDiv = Timer4CntPclkDiv16;
-    stcCntInit.u16Cycle = get_pclk1Freq() / (1 << Timer4CntPclkDiv16) / frequency;
-
-    printf("u16Cycle: %d\n", stcCntInit.u16Cycle);
-#endif
+    stcCntInit.u16Cycle = SYSTEM_CLOCK_FREQUENCIES.pclk1 / (1 << stcCntInit.enClkDiv) / frequency;
 
     TIMER4_CNT_Init(M4_TMR42, &stcCntInit);
 
@@ -399,3 +269,4 @@ bool timer42_set_compare(const uint16_t compare) {
 uint16_t timer42_get_count() {
     return TIMER4_CNT_GetCountVal(M4_TMR42);
 }
+

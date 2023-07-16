@@ -59,14 +59,9 @@ int main(void) {
     // disk_initialize(0);
 
     timer01B_init(); // used for beep duration timer
-    timer02A_init(); // 1k Hz, millis()
     timer02B_init(); // soft serial
     timer41_init();  // 1k Hz, used for temperature tick
     timer42_init();  // step motor
-
-    // SysTick configuration
-    SysTick_Init(1000u);
-
 
 
    // while(1);
