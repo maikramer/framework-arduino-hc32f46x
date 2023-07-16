@@ -1,7 +1,6 @@
 #include "systick.h"
 #include <hc32_ddl.h>
 #include "bsp_timer.h"
-#include "timers.h"
 
 extern "C" void SysTick_IrqHandler(void)
 {
