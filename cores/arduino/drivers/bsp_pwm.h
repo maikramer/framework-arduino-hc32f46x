@@ -44,10 +44,7 @@ void hal_fan_pwm_init(uint8_t fan);
 
 void BSP_PWMx_Init(void);
 
-void fan0_pwm_init();
-void fan2_pwm_init();
-
-void fan_pwm_set_ratio(uint8_t fan, uint8_t ratio);
+void fan_pwm_set_ratio(uint8_t fan, uint16_t ratio);
 
 void beep_pwm_init(void);
 

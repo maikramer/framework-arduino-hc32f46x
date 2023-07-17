@@ -36,7 +36,7 @@
 #define _GET_MODE(IO)       getPinMode(IO)
 #define _SET_MODE(IO, M)    pinMode(IO, M)
 #define _SET_OUTPUT(IO)     _SET_MODE(IO, OUTPUT)
-#define SET_PWM(IO)         _SET_OUTPUT(IO)
+#define SET_PWM(IO)
 
 #define OUT_WRITE(IO, V) \
   do                     \
@@ -53,8 +53,7 @@
 #define IS_INPUT(IO) (_GET_MODE(IO) == INPUT || _GET_MODE(IO) == INPUT_FLOATING || _GET_MODE(IO) == INPUT_ANALOG || _GET_MODE(IO) == INPUT_PULLUP ||  _GET_MODE(IO) == INPUT_PULLDOWN)
 #define IS_OUTPUT(IO) (_GET_MODE(IO) == OUTPUT || _GET_MODE(IO) == OUTPUT_OPEN_DRAIN)
 
-// TODO: #warning "PWM_PIN(IO) is not implemented"
-#define PWM_PIN(IO) (false)
+#define PWM_PIN(IO) (true)
 
 #define extDigitalRead(IO) digitalRead(IO)
 #define extDigitalWrite(IO, V) digitalWrite(IO, V)
