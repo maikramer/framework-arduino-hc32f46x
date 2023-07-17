@@ -102,8 +102,8 @@ usart_config_t USART4_config = {
     .peripheral = {
         .register_base = M4_USART4,
         .clock_id = PWC_FCG1_PERIPH_USART4,
-        .tx_pin_function = Func_Usart3_Tx,
-        .rx_pin_function = Func_Usart3_Rx
+        .tx_pin_function = Func_Usart4_Tx,
+        .rx_pin_function = Func_Usart4_Rx
     },
     .interrupts = {
         .rx_data_available = {
