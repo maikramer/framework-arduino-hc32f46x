@@ -8,6 +8,9 @@
 //
 
 usart_config_t USART1_config = {
+    .initialized = false,
+    .enabled = false,
+    .baudrate = 115200,
     .peripheral = {
         .register_base = M4_USART1,
         .clock_id = PWC_FCG1_PERIPH_USART1,
@@ -40,6 +43,9 @@ usart_config_t USART1_config = {
 };
 
 usart_config_t USART2_config = {
+    .initialized = false,
+    .enabled = false,
+    .baudrate = 115200,
     .peripheral = {
         .register_base = M4_USART2,
         .clock_id = PWC_FCG1_PERIPH_USART2,
@@ -72,6 +78,9 @@ usart_config_t USART2_config = {
 };
 
 usart_config_t USART3_config = {
+    .initialized = false,
+    .enabled = false,
+    .baudrate = 115200,
     .peripheral = {
         .register_base = M4_USART3,
         .clock_id = PWC_FCG1_PERIPH_USART3,
@@ -99,6 +108,9 @@ usart_config_t USART3_config = {
 };
 
 usart_config_t USART4_config = {
+    .initialized = false,
+    .enabled = false,
+    .baudrate = 115200,
     .peripheral = {
         .register_base = M4_USART4,
         .clock_id = PWC_FCG1_PERIPH_USART4,

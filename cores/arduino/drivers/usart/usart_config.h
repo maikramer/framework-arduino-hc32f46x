@@ -127,6 +127,9 @@ struct usart_runtime_state_t
  */
 struct usart_config_t
 {
+    bool initialized;
+    bool enabled;
+    uint32_t baudrate;
     /**
      * @brief USART peripheral configuration
      */
