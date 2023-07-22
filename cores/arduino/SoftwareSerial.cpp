@@ -38,13 +38,14 @@
 #include "SoftwareSerial.h"
 #include "bsp_timer.h"
 #include "hc32_ddl.h"
-#include "fastio.h"
 #include "drivers/gpio/gpio.h"
 
 #define OVERSAMPLE 3 // in RX, Timer will generate interruption OVERSAMPLE time during a bit. Thus OVERSAMPLE ticks in a bit. (interrupt not synchronized with edge).
 
 // defined in bit-periods
 #define HALFDUPLEX_SWITCH_DELAY 5
+
+
 
 //
 // Static
@@ -246,7 +247,7 @@ inline void SoftwareSerial::recv()
   if (--rx_tick_cnt <= 0)
   { // if rx_tick_cnt > 0 interrupt is discarded. Only when rx_tick_cnt reach 0 RX pin is considered
     //    bool inbit = LL_GPIO_IsInputPinSet(_receivePinPort, _receivePinNumber) ^ _inverse_logic;
-    bool inbit = READ(_receivePin);
+    bool inbit = GPIO_GetBit(_receivePin);
     if (rx_bit_cnt == -1)
     { // rx_bit_cnt = -1 :  waiting for start bit
       if (!inbit)

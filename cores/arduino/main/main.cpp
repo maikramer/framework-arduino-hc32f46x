@@ -18,21 +18,6 @@
 //For serial testing
 #define debug Serial2
 
-void TMCTest(){
-    Serial1.begin(115200);
-    int msgSize = 0;
-    while (1) {
-        delay(1000);
-        msgSize = Serial1.available();
-        debug.printf("Available: %d", msgSize);
-        if (msgSize > 0) {
-            auto str = debug.readString();
-            delay(100);
-            Serial1.print(str.c_str());
-        }
-    }
-}
-
 int main(void) {
     fault_handlers_init();
     // initialize SoC, then CORE_DEBUG
@@ -44,10 +29,6 @@ int main(void) {
     CORE_DEBUG_PRINTF("core entering setup\n");
 
     H32OTS::init();
-    get_all_clock();
-    endstop_pin_init();
-    stepper_pin_init();
-    heater_pin_init();
 
     // 0x1C swd on ; 0x1F swd off
     PORT_DebugPortSetting(0x1F, Disable);
@@ -56,15 +37,11 @@ int main(void) {
     beep_pwm_init();
     hal_sdio_init();
 
-    // disk_initialize(0);
-
     timer01B_init(); // used for beep duration timer
     timer02B_init(); // soft serial
     timer41_init();  // 1k Hz, used for temperature tick
     timer42_init();  // step motor
 
-
-   // while(1);
     setup();
     core_hook_post_setup();
 
